@@ -8,7 +8,7 @@
 
 |Nom|Prénom|login|email|
 |--|--|--|--|
-| ??? | ??? | ??? | ???@???.?? |
+| COUSIN | gabriel | cg170357 | gabriel.cousin@etu.univ-lehavre.fr |
 
 ## Travail à réaliser
 
