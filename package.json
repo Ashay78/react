@@ -35,5 +35,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "mqtt": "^4.2.6",
+    "react-router-dom": "^5.2.0"
   }
 }
