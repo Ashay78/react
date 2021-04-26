@@ -9,6 +9,7 @@
 |Nom|Prénom|login|email|
 |--|--|--|--|
 | COUSIN | gabriel | cg170357 | gabriel.cousin@etu.univ-lehavre.fr |
+| MERCOU | Allan | remplir | remplir |
 
 ## Travail à réaliser
 
