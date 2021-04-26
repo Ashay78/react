@@ -3,7 +3,7 @@ import Broker from './component/Broker/Broker';
 import SensorDetail from './component/SensorDetail/SensorDetail';
 import './App.css';
 import mqtt from "mqtt";
-import {BrowserRouter, Link} from "react-router-dom";
+import {BrowserRouter, Link, Route} from "react-router-dom";
 
 class Sensor {
     constructor(id, name, value, type) {
@@ -28,18 +28,16 @@ export default class App extends React.Component {
 
 
     chargerUrlBroker(url) {
-        const client = mqtt.connect(url, {
-            reconnectPeriod: 0,
-            connectTimeout: 1000,
-        });
 
-        if (this.state.client) {
+        if(this.state.client) {
             this.state.client.end();
         }
-        this.setState({client: client, err: false, sensors: []});
+
+        try {
+        const client = mqtt.connect(url);
+
         client.on("connect", () => {
             client.subscribe("value/#", () => {
-                console.log("subscribing...");
             });
         });
 
@@ -52,19 +50,22 @@ export default class App extends React.Component {
             if (sensorFind === undefined) {
                 this.state.sensors.push(new Sensor(id, objSensor.name, objSensor.value, objSensor.type));
                 this.setState({sensors: this.state.sensors});
-
             } else {
                 sensorFind.values.push(objSensor.value);
                 this.setState({sensors: this.state.sensors});
             }
+            this.setState({client: client});
         });
+        } catch (e) {
+            console.log("erreur")
+        }
     }
 
 
     render() {
         const listItems = this.state.sensors.map((sensor) =>
             <li className="elem" key={sensor.id}>
-                <Link to={"/"+sensor.name.replace(/ /g, "_").toLowerCase()} >{sensor.name}</Link>
+                <Link to={"/"+sensor.name} >{sensor.name}</Link>
             </li>
         );
         return (<div className="App">
@@ -73,8 +74,10 @@ export default class App extends React.Component {
             <Broker chargerUrlBroker={this.chargerUrlBroker}/>
             <BrowserRouter>
             {listItems}
+                <Route path={`/:name`}  render={({match}) => (
+                    <SensorDetail sensor={this.state.sensors.find(sens => sens.name === match.params.name)} />
+                )}/>
             </BrowserRouter>
-            <SensorDetail sensors={this.state.sensors}/>
             </body>
         </div>)
     };
